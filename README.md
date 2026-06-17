@@ -91,6 +91,19 @@ assets/nanoG1.bin   the trained <60s policy (655 KB)
 
 ## Credits
 
-Built on [PufferLib](https://github.com/PufferAI/PufferLib)'s compile-time-specialization training engine, [MuJoCo](https://github.com/google-deepmind/mujoco) physics semantics, the [Unitree G1](https://github.com/google-deepmind/mujoco_menagerie) from MuJoCo Menagerie, and [raylib](https://github.com/raysan5/raylib) for the demo. Compute on [Modal](https://modal.com). Inspired by [nanoGPT](https://github.com/karpathy/nanoGPT) and [nanochat](https://github.com/karpathy/nanochat).
+**nanoG1's engine is [PufferLib](https://github.com/PufferAI/PufferLib).** The
+whole approach — compile-time per-environment specialization, zero Python in the
+hot loop, the CUDA trainer, the [Muon](https://github.com/PufferAI/PufferLib)
+optimizer path, PufferNet — is PufferLib's, and the G1 simulator is built as a
+PufferLib environment. nanoG1 would not exist without it. Huge thanks to
+[@jsuarez5341](https://github.com/jsuarez5341) and the PufferLib contributors.
+PufferLib is MIT-licensed; we carry its license forward.
+
+Also built on [MuJoCo](https://github.com/google-deepmind/mujoco) physics
+semantics, the [Unitree G1](https://github.com/google-deepmind/mujoco_menagerie)
+from MuJoCo Menagerie, and [raylib](https://github.com/raysan5/raylib) for the
+demo. Compute on [Modal](https://modal.com). Inspired by
+[nanoGPT](https://github.com/karpathy/nanoGPT) and
+[nanochat](https://github.com/karpathy/nanochat).
 
 MIT licensed.
