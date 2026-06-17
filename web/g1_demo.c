@@ -314,7 +314,7 @@ int main(int argc, char** argv) {
         printf("mesh asset: magic_ok=%d nmesh=%d\n", mg==G1_MESH_MAGIC, nm);
     }
     if (!auto_frames) {
-        InitWindow(1280,720,"nanoG1 - ultra fast RL for robotics");
+        InitWindow(1280,720,"nanoG1 - G1 walking policy trained in < 60s");
         g_font=LoadFontEx("web/assets/font.ttf", 48, 0, 0);   // load big, draw small -> crisp
         if (g_font.texture.id==0) g_font=GetFontDefault();
         SetTextureFilter(g_font.texture, TEXTURE_FILTER_BILINEAR);
