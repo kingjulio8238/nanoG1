@@ -65,12 +65,16 @@ def bench(config: str = "production"):
     os.environ["G1_MODEL_PATH"] = MODEL
     print(subprocess.run(["git", "log", "--oneline", "-1"], capture_output=True, text=True).stdout.strip(), flush=True)
 
-    print(f"building profile binary [{config}]: {flags}", flush=True)
-    b = subprocess.run(f"NVCC_ARCH={ARCH} G1_TASK_FLAGS='{flags}' ./build.sh g1gpu --profile",
-                       shell=True, capture_output=True, text=True)
-    if b.returncode != 0:
-        print(b.stdout[-3000:]); print(b.stderr[-3000:])
-        raise SystemExit(f"build failed ({config})")
+    # build.sh compiles the env's *_gpu.cu (defining my_gpu_*) only in DEFAULT mode and
+    # archives it into the static lib; --profile skips that. So build the env first,
+    # THEN the profile binary (which links the now-complete static lib).
+    env = f"NVCC_ARCH={ARCH} G1_TASK_FLAGS='{flags}'"
+    for step in ("./build.sh g1gpu", "./build.sh g1gpu --profile"):
+        print(f"[{config}] {step}   ({flags})", flush=True)
+        b = subprocess.run(f"{env} {step}", shell=True, capture_output=True, text=True)
+        if b.returncode != 0:
+            print(b.stdout[-2500:]); print(b.stderr[-4000:])
+            raise SystemExit(f"build failed ({config}): {step}")
 
     # sweep batch sizes; envspeed prints "throughput: X M steps/s" (env/control steps)
     rows = []
