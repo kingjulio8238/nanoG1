@@ -37,8 +37,8 @@ SEED = 0
 JOINT_NOISE = 0.05   # rad, position-target perturbation (matches stepping-bench spirit)
 
 # GPU tier — benchmark on the SAME silicon we quote our numbers on (mirrors
-# train_g1gpu.py). Default RTX-PRO-6000 (= RTX 5090, Blackwell GB202, sm_120),
-# where our headline 1.78M SPS / 8.9M physics-steps/s live.
+# train.py). Default RTX-PRO-6000 (Blackwell GB202, sm_120), where nanoG1's
+# 8.5M physics-steps/s (production) lives — reproduce via bench/bench_nanog1.py.
 #   ULTRA_GPU=L40S  modal run ...   # the RTX 4090 comparison (Ada, safest)
 #   ULTRA_GPU=H100  modal run ...   # the Phase-0 wall GPU
 GPU_TYPE = os.environ.get("ULTRA_GPU", "RTX-PRO-6000")
@@ -240,15 +240,14 @@ def run(dts: str = "", batches: str = "", smoke: bool = False, robot: str = "g1"
         "gpu_tier": {"requested": GPU_TYPE, "arch": GPU_ARCH, "cuda": CUDA_VER, "torch": TORCH_CUDA},
         "system": {"gpu": gpu, "versions": vers},
         "results": results,
-        "reference_ours": {
-            "RTX-PRO-6000": {"ours_physics_steps_per_s_staged": 8.9e6, "ours_training_sps": 1.78e6,
-                             "ours_sim_s_per_wall_s_at_dt0.004": round(8.9e6 * 0.004, 1)},
-            "L40S": {"ours_training_sps": 525e3, "note": "L40S = RTX 4090 proxy (v1)"},
-            "H100": {"ours_physics_steps_per_s_staged": 5.68e6, "ours_training_sps": 568e3,
-                     "warp_wall_steps_per_s": 3.34e6},
+        "reference_nanog1": {
+            "RTX-PRO-6000": {"nanog1_physics_steps_per_s_production": 8.5e6, "nanog1_env_steps_per_s": 1.70e6,
+                             "nanog1_sim_s_per_wall_s_at_dt0.004": round(8.5e6 * 0.004, 1)},
+            "L40S": {"note": "L40S = RTX 4090 proxy; run bench_nanog1.py there for the number"},
+            "H100": {"note": "run bench_nanog1.py on H100 for the number"},
         }.get(GPU_TYPE, {}),
-        "compare_note": "Use sim_s_per_wall_s (dt-normalized) for cross-engine. Ours @dt0.004: "
-                        "8.9M steps/s -> 35,600 sim-s/wall-s on PRO-6000.",
+        "compare_note": "Use sim_s_per_wall_s (dt-normalized) for cross-engine. nanoG1 @dt0.004: "
+                        "8.5M steps/s -> 34,000 sim-s/wall-s on PRO-6000 (reproduce: bench_nanog1.py).",
         "run_meta": _run_meta(t_start, smoke, gpu_hr=RATE_GPU_HR, cpu_cores=8, mem_gib=32),
     })
 

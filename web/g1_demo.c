@@ -379,27 +379,29 @@ int main(int argc, char** argv) {
             draw_geoms();
             EndMode3D();
             // physics-throughput bar chart embedded in the env (transparent bg).
-            // REAL matched-config numbers (docs/RESULTS.md, docs/genesis_g1.md): same
-            // RTX 5090-class GPU, G1, fp32, foot-floor contact, pure stepping. Ours is
+            // REAL matched-config numbers (RESULTS.md, reproduce: bench/bench_nanog1.py):
+            // same RTX PRO 6000, G1, fp32, foot-floor contact, pure stepping. nanoG1 is
             // MuJoCo-bit-exact; Genesis runs its own approximate physics.
             // WEB-ONLY: the native speedrun viewer shows just the robot walking.
 #ifdef PLATFORM_WEB
             {
-                // measured peak physics steps/s, RTX 5090-class GPU, G1, dt 0.002,
-                // Newton 3/ls 5, batch 16384 (bench/bench_*.py, 2026-06-17). ours/
+                // measured physics steps/s, RTX PRO 6000, G1, IDENTICAL settings
+                // (dt 0.002, Newton 3/ls 5). nanoG1 = 1.8x mujoco-warp; nanoG1/
                 // warp/MJX = identical MuJoCo physics; Genesis = its own solver.
                 Color ink=(Color){40,44,52,255};
-                Color cOurs=(Color){46,160,67,255},  cWarp=(Color){31,111,235,255},
+                Color cNano=(Color){46,160,67,255},  cWarp=(Color){31,111,235,255},
                       cGen =(Color){219,128,40,255}, cMjx =(Color){137,87,229,255};
-                int nameW=150, maxw=500; double mx=8.9;       // nanoG1 = full bar
+                int nameW=150, maxw=500; double mx=7.25;       // nanoG1 = full bar
                 int x0=52, bx=x0+nameW, y0=28;                 // left-shifted (room for the nanoG1 brand on the right)
                 const char* nm[4]={"nanoG1","mujoco-warp","Genesis","MJX"};
-                double vv[4]={8.9,4.00,2.28,1.12}; Color cc[4]={cOurs,cWarp,cGen,cMjx};
+                double vv[4]={7.25,4.00,2.28,1.12};
+                const char* val[4]={"7.25M","4.0M","2.3M","1.1M"};
+                Color cc[4]={cNano,cWarp,cGen,cMjx};
                 for (int i=0;i<4;i++){
                     int y=y0+i*36, w=(int)(maxw*vv[i]/mx);
                     DrawTextEx(g_font, nm[i], (Vector2){(float)x0,(float)(y+3)}, 19, 1.0f, ink);
                     DrawRectangle(bx, y, w, 24, cc[i]);
-                    DrawTextEx(g_font, TextFormat("%.1fM", vv[i]), (Vector2){(float)(bx+w+10),(float)(y+3)}, 18, 1.0f, ink);
+                    DrawTextEx(g_font, val[i], (Vector2){(float)(bx+w+10),(float)(y+3)}, 18, 1.0f, ink);
                 }
                 DrawTextEx(g_font, "^^ Steps Per Second", (Vector2){(float)x0,(float)(y0+4*36+8)}, 19, 1.0f, ink);
             }

@@ -45,7 +45,7 @@ def _load_g1(robot="g1"):
 
     impl="jax" override: playground env init calls mjx.put_model, and on GPU
     machines MJX auto-prefers its warp backend (crashes without mujoco_warp;
-    and we want engine choice to be OURS, per-bench, not auto). The override
+    and we want engine choice to be nanoG1's, per-bench, not auto). The override
     only affects the env's internal mjx model build — the mj_model we extract
     is identical either way.
     """
@@ -53,7 +53,7 @@ def _load_g1(robot="g1"):
         import mujoco
         m = mujoco.MjModel.from_binary_path("/root/go2.mjb")  # our frozen md5-pinned model
         # MATCH our engine's validated solver budget (the frozen mjb bakes
-        # iterations=1; ours validates at Newton 2 / ls 5 — make every engine do
+        # iterations=1; nanoG1 validates at Newton 2 / ls 5 — make every engine do
         # the SAME solver work per step so steps/s is apples-to-apples).
         m.opt.iterations = 2
         m.opt.ls_iterations = 5

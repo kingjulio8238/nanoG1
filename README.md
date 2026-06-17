@@ -62,18 +62,22 @@ hardware checklist: [`deploy/README.md`](deploy/README.md).
 | **Cost-to-walk** | **~$0.17** |
 | **Method** | PPO + V-trace, **pure RL from scratch** — no demos, no reference motion |
 | **Physics** | MuJoCo-grade soft-convex contact, friction cones, domain randomization |
-| **Engine throughput** | **8.9M physics steps/s** on one GPU (see chart below) |
+| **Engine throughput** | **8.5M physics steps/s** (production) · **1.8× mujoco_warp** at matched settings |
 
-### Engine throughput — G1, single RTX PRO 6000, physics steps/s
+### Engine throughput — G1, RTX PRO 6000, physics steps/s (identical settings)
 
 ```
-nanoG1        ████████████████████████████████████  8.9M
-mujoco_warp   ████████████████                       4.0M
-Genesis*      █████████                               2.3M
-MJX           ████▌                                   1.1M
+nanoG1        ████████████████████████████████████  7.25M
+mujoco_warp   ████████████████████                   4.0M
+Genesis*      ███████████                            2.3M
+MJX           █████▌                                 1.1M
 ```
 
-\* Genesis runs its own (non-MuJoCo) solver — a competitor datapoint, not matched-physics. See [RESULTS.md](RESULTS.md) for exact settings, the matched-physics comparison (1.6× warp), and provenance.
+Apples-to-apples at **identical settings** (dt 0.002, Newton 3/5): **1.8× mujoco_warp**.
+In its own production config (dt 0.004, Newton 2/3 — what trains the policy), nanoG1's
+engine runs at **8.5M**. Reproduce both from a clean clone: `modal run bench/bench_nanog1.py`.
+
+\* Genesis runs its own (non-MuJoCo) solver — a competitor datapoint, not matched-physics. See [RESULTS.md](RESULTS.md) for exact settings, env-step throughput, and provenance.
 
 ---
 

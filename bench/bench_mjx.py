@@ -54,7 +54,7 @@ def _load_g1(robot="g1"):
         import mujoco
         m = mujoco.MjModel.from_binary_path("/root/go2.mjb")
         # MATCH our engine's validated solver budget (mjb bakes iterations=1;
-        # ours validates at Newton 2 / ls 5) so steps/s is apples-to-apples.
+        # nanoG1 validates at Newton 2 / ls 5) so steps/s is apples-to-apples.
         m.opt.iterations = 2
         m.opt.ls_iterations = 5
         return m
@@ -262,7 +262,7 @@ def run(batches: str = "", smoke: bool = False, with_scan: bool = False,
     print(f"jax devices: {jax.devices()}")
 
     # impl="jax": THIS bench measures the MJX/XLA path. On GPU machines newer
-    # MJX auto-prefers its warp backend — that's bench_warp.py's job, not ours.
+    # MJX auto-prefers its warp backend — that's bench_warp.py's job, not nanoG1's.
     try:
         mjxm = mjx.put_model(m, impl="jax")
     except TypeError:  # older mjx without the impl kwarg

@@ -1,7 +1,7 @@
 """nanoG1 — engine throughput benchmark (the SHIPPED g1gpu engine, reproducible).
 
-    modal run bench/bench_ours.py                 # production config (what trains the policy)
-    modal run bench/bench_ours.py --config matched # warp-matched solver (dt 0.002, Newton 3/5)
+    modal run bench/bench_nanog1.py                 # production config (what trains the policy)
+    modal run bench/bench_nanog1.py --config matched # warp-matched solver (dt 0.002, Newton 3/5)
 
 Builds the EXACT same engine train.py uses — the pinned PufferLib fork (recipe.FORK_PIN),
 compiled with recipe.TASK_FLAGS — then runs the fork's own `profile envspeed`:
