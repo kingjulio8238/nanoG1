@@ -4,7 +4,7 @@ Saves the COMPILED model as envs/g1/model/g1.mjb (binary — byte-identical
 physics across loads) plus a reference XML, and verifies the md5 against the
 Phase-0 wall fingerprint. Pin: mujoco==3.9.0, playground==0.2.0.
 
-Run:  .venv/bin/python scripts/extract_g1_model.py
+Run:  .venv/bin/python tools/extract_g1_model.py
 """
 
 import hashlib
