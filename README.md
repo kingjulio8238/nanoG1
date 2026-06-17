@@ -88,7 +88,7 @@ The thesis: MuJoCo's physics isn't inherently slow for RL — it's just never be
 Two ingredients make it learn to walk this fast:
 
 1. **A G1-specialized GPU engine** — a [pinned PufferLib fork](https://github.com/kingjulio8238/PufferLib/tree/g1) that bakes the G1 in at compile time (zero Python in the hot loop). `recipe.py` pins the exact commit.
-2. **A left↔right symmetry loss** (N1, after [Yu et al. 2018](https://arxiv.org/abs/1801.08093)) — regularizing the policy toward a mirror-symmetric gait cut samples-to-walk ~26% *and* smoothed the gait. That's the single biggest lever.
+2. **A left↔right symmetry loss** (after [Yu et al. 2018](https://arxiv.org/abs/1801.08093)) — regularizing the policy toward a mirror-symmetric gait cut samples-to-walk ~26% *and* smoothed the gait. That's the single biggest lever.
 
 Everything else — the reward weights, PPO/Muon hyperparameters, the dt/decimation/solver settings — lives in **one file, [`recipe.py`](recipe.py)**. That's the dial you turn.
 
@@ -104,7 +104,7 @@ speedrun.sh      one command: env -> engine -> train -> gate
 setup.sh         fetch the pinned G1 engine (for local demo/eval builds)
 web/             browser demo (raylib + the policy, host physics) -> WASM
 deploy/          run the policy on a REAL Unitree G1 (unitree_sdk2py, low-level DDS)
-bench/           competitor benchmarks (warp / MJX / Genesis) — same card, same G1
+bench/           reproducible engine throughput (bench_nanog1.py) + competitors (warp / MJX / Genesis)
 tools/           bake the G1 model + meshes from MuJoCo (assets are committed)
 assets/nanoG1.bin   the trained <60s policy (655 KB)
 ```
