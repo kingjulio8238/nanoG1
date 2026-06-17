@@ -314,7 +314,7 @@ int main(int argc, char** argv) {
         printf("mesh asset: magic_ok=%d nmesh=%d\n", mg==G1_MESH_MAGIC, nm);
     }
     if (!auto_frames) {
-        InitWindow(1280,720,"G1 — learned to walk in 59s, pure RL (host physics, no MuJoCo)");
+        InitWindow(1280,720,"nanoG1 - ultra fast RL for robotics");
         g_font=LoadFontEx("web/assets/font.ttf", 48, 0, 0);   // load big, draw small -> crisp
         if (g_font.texture.id==0) g_font=GetFontDefault();
         SetTextureFilter(g_font.texture, TEXTURE_FILTER_BILINEAR);
@@ -353,6 +353,8 @@ int main(int argc, char** argv) {
             // REAL matched-config numbers (docs/RESULTS.md, docs/genesis_g1.md): same
             // RTX 5090-class GPU, G1, fp32, foot-floor contact, pure stepping. Ours is
             // MuJoCo-bit-exact; Genesis runs its own approximate physics.
+            // WEB-ONLY: the native speedrun viewer shows just the robot walking.
+#ifdef PLATFORM_WEB
             {
                 // measured peak physics steps/s, RTX 5090-class GPU, G1, dt 0.002,
                 // Newton 3/ls 5, batch 16384 (bench/bench_*.py, 2026-06-17). ours/
@@ -371,6 +373,7 @@ int main(int argc, char** argv) {
                     DrawTextEx(g_font, TextFormat("%.1fM", vv[i]), (Vector2){(float)(bx+w+10),(float)(y+3)}, 18, 1.0f, ink);
                 }
             }
+#endif
             EndDrawing();
             if (getenv("G1_DEMO_SHOT") && frame>=atoi(getenv("G1_DEMO_SHOT"))) { TakeScreenshot("web/g1_demo.png"); break; }
         }
