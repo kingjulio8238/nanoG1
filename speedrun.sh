@@ -26,6 +26,6 @@ cat <<'EOF'
 
 ✓ speedrun complete.
   See it move:   bash web/build_demo.sh && ./build/g1demo assets/nanoG1.bin
-  Live demo:     https://g1-sub60-walk.vercel.app
+  Live demo:     https://nanog1.com
   The policy:    https://huggingface.co/kingJulio/nanoG1
 EOF

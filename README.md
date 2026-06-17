@@ -4,7 +4,7 @@
 
 No demonstrations, no reference gait, no motion capture. The policy starts from noise and learns to walk from reward alone in **~59 seconds** of wall-clock training (~75M samples at 1.28M samples/s) for about **$0.17** on one GPU.
 
-🤖 **[Live demo — drive the trained G1 in your browser](https://g1-sub60-walk.vercel.app)** &nbsp;·&nbsp; 🤗 **[Model on Hugging Face](https://huggingface.co/kingJulio/nanoG1)**
+🤖 **[Live demo — drive the trained G1 in your browser](https://nanog1.com)** &nbsp;·&nbsp; 🤗 **[Model on Hugging Face](https://huggingface.co/kingJulio/nanoG1)**
 
 ![nanoG1](assets/preview.png)
 
