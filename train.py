@@ -40,6 +40,7 @@ image = (
         f"cd {PUFFER} && NVCC_ARCH={ARCH} G1_TASK_FLAGS='{R.TASK_FLAGS}' "
         f"PUFFER_TRAIN_FLAGS='{R.TRAIN_FLAGS}' ./build.sh g1gpu",
     )
+    .add_local_python_source("recipe")   # the remote fn imports recipe at runtime
 )
 
 
