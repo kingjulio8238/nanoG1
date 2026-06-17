@@ -18,9 +18,10 @@ compile/JIT time separated from steady-state throughput.
 
 **What "time-to-walk" means.** The policy is trained on a 150M-step schedule (the LR
 anneals over the full budget). It crosses the frozen quality gate at ~75M samples;
-`time-to-walk = samples-to-walk / steady-SPS = 75M / 1.28M ≈ 59 s`. `train.py`
-captures the checkpoint nearest 75M and ships it as `assets/nanoG1.bin`. Training is
-deterministic per built binary (fixed seed + pinned engine commit).
+`time-to-walk = samples-to-walk ÷ steady-SPS` — at the measured **75.1M** samples and
+**1.276M SPS**, that's **58.9 s** (the 75M / 1.28M in the table are those values rounded).
+`train.py` captures the checkpoint nearest 75M and ships it as `assets/nanoG1.bin`.
+Training is deterministic per built binary (fixed seed + pinned engine commit).
 
 ## Quality gate (the frozen bar)
 

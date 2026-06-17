@@ -62,7 +62,7 @@ hardware checklist: [`deploy/README.md`](deploy/README.md).
 | **Cost-to-walk** | **~$0.17** |
 | **Method** | PPO + V-trace, **pure RL from scratch** — no demos, no reference motion |
 | **Physics** | MuJoCo-grade soft-convex contact, friction cones, domain randomization |
-| **Engine throughput** | **8.5M physics steps/s** (production) · **1.8× mujoco_warp** at matched settings |
+| **Engine throughput** | **1.8× mujoco_warp** at identical settings (7.25M vs 4.0M physics steps/s) |
 
 ### Engine throughput — G1, RTX PRO 6000, physics steps/s (identical settings)
 
