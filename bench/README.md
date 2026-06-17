@@ -7,10 +7,16 @@ blob between `=== ULTRA-BENCH RESULT ===` markers.
 
 | file | engine | physics |
 |---|---|---|
-| `bench_ours.py`     | nanoG1 (G1-specialized CUDA) | MuJoCo, compile-time specialized |
+| `bench_ours.py`     | nanoG1 — the **shipped** g1gpu engine (pinned fork, same build as `train.py`) | MuJoCo, compile-time specialized |
 | `bench_warp.py`     | mujoco_warp (NVIDIA Warp)    | MuJoCo, general-purpose CUDA |
 | `bench_mjx.py`      | MJX (JAX/XLA)                | MuJoCo, padded to static shapes |
 | `bench_genesis.py`  | Genesis                      | **its own solver** (not MuJoCo) |
+
+`bench_ours.py` measures the engine that actually trains the policy — it builds the
+pinned fork (`recipe.FORK_PIN`) and runs the fork's own `profile envspeed`
+(environment stepping, **no learner**), × decimation = physics steps/s. It reproduces
+from a clean clone (`bash setup.sh` builds the same engine), so the headline number
+in [../RESULTS.md](../RESULTS.md) is reproducible, not derived from a separate codebase.
 
 ## Run — smoke first, always
 
@@ -26,6 +32,8 @@ modal run bench/bench_mjx.py --smoke
 modal run bench/bench_genesis.py --smoke
 
 # pass 2: full sweeps on the same card (only after smokes are green)
+NANOG1_GPU=RTX-PRO-6000 modal run bench/bench_ours.py                 # nanoG1, production config
+NANOG1_GPU=RTX-PRO-6000 modal run bench/bench_ours.py --config matched # nanoG1, warp-matched solver
 NANOG1_GPU=RTX-PRO-6000 modal run bench/bench_warp.py --nconmax 32 --njmax 128
 NANOG1_GPU=RTX-PRO-6000 modal run bench/bench_mjx.py
 NANOG1_GPU=RTX-PRO-6000 modal run bench/bench_genesis.py
