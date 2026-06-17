@@ -73,9 +73,9 @@ Genesis*      ███████████                            2.3M
 MJX           █████▌                                 1.1M
 ```
 
-Apples-to-apples at **identical settings** (dt 0.002, Newton 3/5): **1.8× mujoco_warp**.
-In its own production config (dt 0.004, Newton 2/3 — what trains the policy), nanoG1's
-engine runs at **8.5M**. Reproduce both from a clean clone: `modal run bench/bench_nanog1.py`.
+Two reproducible numbers (`modal run bench/bench_nanog1.py`):
+- **matched — 7.25M** (the chart above): nanoG1 re-run at mujoco_warp's *exact* solver settings (dt 0.002, Newton 3/5), so it's an apples-to-apples fight → **1.8× warp**.
+- **production — 8.5M**: nanoG1's *own* solver (dt 0.004, Newton 2/3) — the lighter config that actually trains the policy, and the number you get in normal use.
 
 \* Genesis runs its own (non-MuJoCo) solver — a competitor datapoint, not matched-physics. See [RESULTS.md](RESULTS.md) for exact settings, env-step throughput, and provenance.
 
