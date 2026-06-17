@@ -35,6 +35,23 @@ bash web/build_demo.sh && ./build/g1demo assets/nanoG1.bin   # watch it locally
 
 Train on a different card: `NANOG1_GPU=H100 modal run train.py`.
 
+### Run it on a real robot
+
+Put the policy on a physical **Unitree G1**:
+
+```bash
+bash setup.sh                 # engine fork (for puffernet.h), once
+bash deploy/build_policy.sh   # build the inference shim
+python deploy/deploy_g1.py --net eth0          # walk in place
+python deploy/deploy_g1.py --net eth0 --teleop # WASD drive
+```
+
+It runs a 50 Hz loop over Unitree's low-level DDS interface (`unitree_sdk2py`):
+robot state → the exact trained observation → policy → joint PD targets, with a
+zero-torque → move-to-home → policy safety sequence. **The policy is sim-trained —
+hang the robot from a gantry and keep the E-stop in hand.** Full guide and the
+hardware checklist: [`deploy/README.md`](deploy/README.md).
+
 ---
 
 ## What you get
@@ -82,6 +99,7 @@ eval.py          quality gate — runs the host-physics battery, checks it walks
 speedrun.sh      one command: env -> engine -> train -> gate
 setup.sh         fetch the pinned G1 engine (for local demo/eval builds)
 web/             browser demo (raylib + the policy, host physics) -> WASM
+deploy/          run the policy on a REAL Unitree G1 (unitree_sdk2py, low-level DDS)
 bench/           competitor benchmarks (warp / MJX / Genesis) — same card, same G1
 tools/           bake the G1 model + meshes from MuJoCo (assets are committed)
 assets/nanoG1.bin   the trained <60s policy (655 KB)

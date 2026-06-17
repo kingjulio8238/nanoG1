@@ -8,6 +8,11 @@ build/
 __pycache__/
 *.pyc
 
+# compiled artifacts (deploy inference shim, etc.)
+*.so
+*.dylib
+*.o
+
 # logs / misc
 logs/
 *.log

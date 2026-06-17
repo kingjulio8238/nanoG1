@@ -12,6 +12,9 @@ dependencies = [
 [project.optional-dependencies]
 # only needed to regenerate the baked G1 assets (tools/*.py) — the repo ships them
 assets = ["mujoco==3.9.0", "numpy"]
+# real-robot deployment (deploy/). unitree_sdk2py is not on PyPI — install from
+# github.com/unitreerobotics/unitree_sdk2_python (see deploy/README.md)
+deploy = ["numpy"]
 
 [tool.uv]
 package = false
