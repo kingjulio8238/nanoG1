@@ -341,14 +341,41 @@ int main(int argc, char** argv) {
         if (qpos[2]<0.35 || gb[2]>-0.6 || !isfinite(qpos[2])) { falls++; demo_reset(); }
 
         if (!auto_frames) {
-            Camera3D cam={0}; cam.position=(Vector3){(float)qpos[0]-2.2f,(float)qpos[1]-2.2f,1.3f};
+            // camera sits ahead of the robot's heading -> it always walks TOWARD the viewer
+            double q0=qpos[3],q1=qpos[4],q2=qpos[5],q3=qpos[6];
+            double hx=1.0-2.0*(q2*q2+q3*q3), hy=2.0*(q1*q2+q0*q3);
+            double hn=sqrt(hx*hx+hy*hy); if(hn>1e-6){hx/=hn;hy/=hn;} else {hx=1;hy=0;}
+            static double sfx=1.0, sfy=0.0;   // smooth heading to kill per-step gait yaw jitter
+            sfx+=(hx-sfx)*0.06; sfy+=(hy-sfy)*0.06;
+            double sn=sqrt(sfx*sfx+sfy*sfy); double cx=sfx/sn, cy=sfy/sn;
+            Camera3D cam={0}; cam.position=(Vector3){(float)(qpos[0]+cx*2.8),(float)(qpos[1]+cy*2.8),1.3f};
             cam.target=(Vector3){(float)qpos[0],(float)qpos[1],0.7f}; cam.up=(Vector3){0,0,1};
             cam.fovy=42; cam.projection=CAMERA_PERSPECTIVE;
             BeginDrawing(); ClearBackground((Color){235,238,242,255}); BeginMode3D(cam);
             DrawCube((Vector3){(float)qpos[0],(float)qpos[1],-0.01f},80,80,0.02f,(Color){250,250,251,255});
-            for (int i=-25;i<=25;i++){ Color gl=(i%5==0)?(Color){190,194,200,255}:(Color){215,219,225,255};
-                DrawLine3D((Vector3){(float)i,-25,0.001f},(Vector3){(float)i,25,0.001f},gl);
-                DrawLine3D((Vector3){-25,(float)i,0.001f},(Vector3){25,(float)i,0.001f},gl); }
+            {   // grid centered on the robot, fading into the floor at the edges (no harsh far-field lines)
+                const Color FLOOR=(Color){250,250,251,255};
+                const float R=14.0f; const int N=16;
+                int gcx=(int)floorf((float)qpos[0]), gcy=(int)floorf((float)qpos[1]);
+                #define GRIDC(maj) ((maj)?(Color){148,154,164,255}:(Color){200,205,212,255})
+                #define FADE(base,t) (Color){ (unsigned char)(base.r+(FLOOR.r-base.r)*(t)), (unsigned char)(base.g+(FLOOR.g-base.g)*(t)), (unsigned char)(base.b+(FLOOR.b-base.b)*(t)), 255 }
+                for (int k=-N;k<=N;k++){
+                    int wx=gcx+k, wy=gcy+k;
+                    Color bx_=GRIDC((((wx%5)+5)%5)==0), by_=GRIDC((((wy%5)+5)%5)==0);
+                    for (int j=-N;j<N;j++){
+                        float dxL=(float)wx-(float)qpos[0], myL=gcy+j+0.5f-(float)qpos[1];
+                        float dL=sqrtf(dxL*dxL+myL*myL);
+                        if (dL<R){ float t=dL/R; t=t*t; Color c=FADE(bx_,t);
+                            DrawLine3D((Vector3){(float)wx,(float)(gcy+j),0.002f},(Vector3){(float)wx,(float)(gcy+j+1),0.002f},c); }
+                        float mxL=gcx+j+0.5f-(float)qpos[0], dyL=(float)wy-(float)qpos[1];
+                        float dT=sqrtf(mxL*mxL+dyL*dyL);
+                        if (dT<R){ float t=dT/R; t=t*t; Color c=FADE(by_,t);
+                            DrawLine3D((Vector3){(float)(gcx+j),(float)wy,0.002f},(Vector3){(float)(gcx+j+1),(float)wy,0.002f},c); }
+                    }
+                }
+                #undef GRIDC
+                #undef FADE
+            }
             draw_geoms();
             EndMode3D();
             // physics-throughput bar chart embedded in the env (transparent bg).
@@ -374,6 +401,7 @@ int main(int argc, char** argv) {
                     DrawRectangle(bx, y, w, 24, cc[i]);
                     DrawTextEx(g_font, TextFormat("%.1fM", vv[i]), (Vector2){(float)(bx+w+10),(float)(y+3)}, 18, 1.0f, ink);
                 }
+                DrawTextEx(g_font, "^^ Steps Per Second", (Vector2){(float)x0,(float)(y0+4*36+8)}, 19, 1.0f, ink);
             }
 #endif
             EndDrawing();
